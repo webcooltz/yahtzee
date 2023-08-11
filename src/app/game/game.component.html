@@ -1,0 +1,127 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Game</h2>
+
+  <!--Game status-->
+  <!-- <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-3">
+        <div class="card-header section-title">Game Status</div>
+        <div class="card-body game-status-content">
+          <div class="game-status-content-item">
+            <div class="game-status-content-item-title">Status</div>
+            <div class="game-status-content-item-value">
+              <span [ngStyle]="{'color': game.gameFinished ? 'red' : 'green'}">
+                {{ game.gameFinished ? "Game Over" : "Ongoing"}}
+              </span>
+            </div>
+          </div>
+          <div class="game-status-content-item">
+            <div class="game-status-content-item-title">Current Round</div>
+            <div class="game-status-content-item-value">{{game.currentRoundNumber}}</div>
+          </div>
+          <div class="game-status-content-item">
+            <div class="game-status-content-item-title">Current Player</div>
+            <div class="game-status-content-item-value">{{activePlayer.name}}</div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-header section-title">Game Score</div>
+        <div class="card-body score-box-content">
+          <div class="score-box-content-item"
+            *ngFor="let player of game.players">
+            <div class="score-box-content-item-title"
+              [ngStyle]="{'background-color': player.color}">
+              <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
+                {{player.name}}
+              </span>
+            </div>
+            <div class="score-box-content-item-value">{{player.score}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Current dice rolling/gameplay-->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header section-title">Round: {{game.currentRoundNumber}}</div>
+        <div class="card-body active-player-container">
+          <div class="active-player">
+            <div class="active-player-name">{{game.currentPlayer.name}}</div>
+          </div>
+        </div>
+
+        <!--Dice Roll-->
+        <div class="card-body dice-roll-container">
+          <div class="dice_roll_legend">
+            <ul>
+              <li>Orange = re-roll</li>
+              <li>Green = safe</li>
+            </ul>
+          </div>
+          <div class="dice-roll">
+            <div class="dice-roll-item"
+              *ngFor="let die of game.dice"
+              [ngStyle]="{'border': game.currentPlayer.rollsLeftThisRound > 2 ? 'blue solid 5px': (die.isSelected ? 'solid orange 5px' : 'solid green 5px')}"
+              (click)="selectDie(die)">
+              <!-- <img src="assets/images/dice-{{die}}.png" /> -->
+              {{ die.currentNumber }}
+            </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block"
+          (click)="rollDice()"
+          [disabled]="game.gameFinished || game.currentPlayer.rollsLeftThisRound < 1">
+          Roll Dice
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Selectable points options-->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-3 point-sections-container">
+        <div class="card-header section-title">Score Card</div>
+        <div class="card-body point-sections-content">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>How to Score</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--User's point sections for this round-->
+              <tr *ngFor="let pointSection of game.currentPlayer.pointsSections">
+                <td>{{ pointSection.name }}</td>
+                <td>{{ pointSection.howToScore }}</td>
+                <td
+                  (click)="selectPointSection(pointSection)"
+                  [ngStyle]="{
+                    'border': pointSection.used ? 'green solid 3px' : (pointSection.isSelected ? 'blue solid 2px' : 'black solid 1px')
+                  }">
+                  {{ pointSection.points }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn-div">
+            <button class="btn btn-primary btn-lg btn-block"
+              (click)="endTurn()"
+              [disabled]="!pointSectionSelected || game.currentPlayer.rollsLeftThisRound > 2">
+              End Turn
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

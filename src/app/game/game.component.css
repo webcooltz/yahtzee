@@ -1,0 +1,53 @@
+/* -----General----- */
+
+/* .btn-div { */
+  /* align-items: center; */
+  /* justify-content: center; */
+/* } */
+
+.section-title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* -----Dice Roll----- */
+
+.dice-roll-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1em;
+}
+
+.dice-roll {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-roll-item {
+  border: solid black 1px;
+  padding: 1em;
+  margin: 1em;
+}
+
+.dice-roll-item-title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* -----Game Status----- */
+
+.game-status-content-item-title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+/* -----Score Card----- */
+
+/* .point-sections-container { */
+
+/* } */

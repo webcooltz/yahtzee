@@ -1,0 +1,26 @@
+ideas
+-make player names editable
+-allow for multiple players (up to 6)
+
+rules
+-look into official rules
+
+add
+-look into adding a timer
+-only select one section per turn
+-press "accept" to accept your selection
+-look into adding a "pass" button
+
+later features
+-look into adding a "hint" button
+-look into adding a "forfeit" button
+-look into adding a "restart" button
+-look into adding a "quit" button
+-look into adding a "save" button ???
+
+error handling
+-find way to prevent navigation or refresh
+
+online play
+-look into firebase(?) or other online database
+-look into websockets
