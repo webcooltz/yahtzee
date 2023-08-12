@@ -28,23 +28,6 @@
     </div> -->
 
   <div class="row">
-    <div class="col-md-6">
-      <div class="card mb-3">
-        <div class="card-header section-title">Game Score</div>
-        <div class="card-body score-box-content">
-          <div class="score-box-content-item"
-            *ngFor="let player of game.players">
-            <div class="score-box-content-item-title"
-              [ngStyle]="{'background-color': player.color}">
-              <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
-                {{player.name}}
-              </span>
-            </div>
-            <div class="score-box-content-item-value">{{player.score}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!--Current dice rolling/gameplay-->
     <div class="col-md-6">
@@ -52,7 +35,18 @@
         <div class="card-header section-title">Round: {{game.currentRoundNumber}}</div>
         <div class="card-body active-player-container">
           <div class="active-player">
-            <div class="active-player-name">{{game.currentPlayer.name}}</div>
+            <div>
+              <span class="active-player-title">
+                Active Player:
+              </span>
+              {{game.currentPlayer.name}}
+            </div>
+            <div>
+              <span class="active-player-title">
+                Rolls left:
+              </span>
+              {{game.currentPlayer.rollsLeftThisRound}}
+              </div>
           </div>
         </div>
 
@@ -60,8 +54,9 @@
         <div class="card-body dice-roll-container">
           <div class="dice_roll_legend">
             <ul>
-              <li>Orange = re-roll</li>
-              <li>Green = safe</li>
+              <li>Blue = No roll yet</li>
+              <li>Orange = Re-roll</li>
+              <li>Green = Safe</li>
             </ul>
           </div>
           <div class="dice-roll">
@@ -70,7 +65,10 @@
               [ngStyle]="{'border': game.currentPlayer.rollsLeftThisRound > 2 ? 'blue solid 5px': (die.isSelected ? 'solid orange 5px' : 'solid green 5px')}"
               (click)="selectDie(die)">
               <!-- <img src="assets/images/dice-{{die}}.png" /> -->
-              {{ die.currentNumber }}
+              <span
+                *ngIf="game.currentPlayer.rollsLeftThisRound < 3">
+                {{ die.currentNumber }}
+              </span>
             </div>
         </div>
         <button class="btn btn-primary btn-lg btn-block"
@@ -83,8 +81,7 @@
     </div>
   </div>
 
-  <!--Selectable points options-->
-  <div class="row">
+  <!--Score Card-->
     <div class="col-md-6">
       <div class="card mb-3 point-sections-container">
         <div class="card-header section-title">Score Card</div>
@@ -115,10 +112,33 @@
           <div class="btn-div">
             <button class="btn btn-primary btn-lg btn-block"
               (click)="endTurn()"
-              [disabled]="!pointSectionSelected || game.currentPlayer.rollsLeftThisRound > 2">
+              [disabled]="!pointSectionSelected || game.currentPlayer.rollsLeftThisRound > 2 || selectedPointSection && selectedPointSection.points === 0">
               End Turn
             </button>
+            <button class="btn btn-warning btn-lg btn-block"
+              (click)="skipTurn()"
+              [disabled]="game.currentPlayer.rollsLeftThisRound > 0 || game.gameFinished || selectedPointSection && selectedPointSection.points > 0">
+              SKIP Turn
+            </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+  <!--Game Score-->
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header section-title">Game Score</div>
+      <div class="card-body score-box-content">
+        <div class="score-box-content-item"
+          *ngFor="let player of game.players">
+          <div class="score-box-content-item-title"
+            [ngStyle]="{'background-color': player.color}">
+            <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
+              {{player.name}}
+            </span>
+          </div>
+          <div class="score-box-content-item-value">{{player.score}}</div>
         </div>
       </div>
     </div>

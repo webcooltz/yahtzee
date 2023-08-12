@@ -17,6 +17,7 @@ export class GameComponent implements OnDestroy {
   players: Player[] = [];
 
   pointSectionSelected: boolean;
+  selectedPointSection!: PointsSection;
 
   constructor(private gameService: GameService) {
     this.gameService.startGame();
@@ -27,7 +28,6 @@ export class GameComponent implements OnDestroy {
     .subscribe(
       (game: Game) => {
         this.game = game;
-        console.log("game changed: ", this.game);
         this.players = this.gameService.getPlayers();
       });
 
@@ -70,6 +70,7 @@ export class GameComponent implements OnDestroy {
   */
   selectPointSection(pointSection: PointsSection) {
     if (pointSection && !pointSection.used && this.game.currentPlayer.rollsLeftThisRound < 3) {
+      console.log("selected: ", pointSection);
       this.clearPointsSelection();
 
       // ---UPPER SECTION--- (1-6)
@@ -79,6 +80,12 @@ export class GameComponent implements OnDestroy {
           pointSection.points += this.game.dice.filter(die => die.currentNumber === pointSection.acceptedDie).length * pointSection.acceptedDie;
           pointSection.isSelected = true;
           this.pointSectionSelected = true;
+          this.selectedPointSection = pointSection;
+        } else {
+          pointSection.points = 0;
+          pointSection.isSelected = true;
+          this.pointSectionSelected = true;
+          this.selectedPointSection = pointSection;
         }
       // ---More complicated sections---
       } else if (!pointSection.isUpperPoints) {
@@ -99,16 +106,24 @@ export class GameComponent implements OnDestroy {
             pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           // -4 of a kind- (add up all dice)
           } else if (pointSection.name.toLowerCase().includes("4") && sharedDiceAmount > 3) {
             pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           // -yahtzee (5 of a kind)- (50 points)
           } else if (pointSection.name.toLowerCase().includes("5") && sharedDiceAmount > 4) {
             pointSection.points = 50;
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
+          } else {
+            pointSection.points = 0;
+            pointSection.isSelected = true;
+            this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           }
         // ---FULL HOUSE---
         } else if (pointSection.name.toLowerCase().includes("house")) {
@@ -129,6 +144,12 @@ export class GameComponent implements OnDestroy {
             pointSection.points = 25;
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
+          } else {
+            pointSection.points = 0;
+            pointSection.isSelected = true;
+            this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           }
         // ---STRAIGHTS---
         } else if (pointSection.name.toLowerCase().includes("straight")) {
@@ -166,10 +187,17 @@ export class GameComponent implements OnDestroy {
             pointSection.points = 30;
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           } else if (largeStraight) {
             pointSection.points = 40;
             pointSection.isSelected = true;
             this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
+          } else {
+            pointSection.points = 0;
+            pointSection.isSelected = true;
+            this.pointSectionSelected = true;
+            this.selectedPointSection = pointSection;
           }
         } else if (pointSection.name.toLowerCase().includes("chance")) {
           // ---CHANCE---
@@ -177,6 +205,7 @@ export class GameComponent implements OnDestroy {
           pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
           pointSection.isSelected = true;
           this.pointSectionSelected = true;
+          this.selectedPointSection = pointSection;
         }
       }
     }
@@ -194,6 +223,11 @@ export class GameComponent implements OnDestroy {
       }
     });
     this.pointSectionSelected = false;
+  }
+
+  skipTurn() {
+    this.gameService.endTurn();
+    this.clearPointsSelection();
   }
 
   endTurn() {

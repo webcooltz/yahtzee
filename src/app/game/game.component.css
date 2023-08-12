@@ -12,6 +12,11 @@
 
 /* -----Dice Roll----- */
 
+.active-player-title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
 .dice-roll-container {
   display: flex;
   flex-direction: column;
