@@ -109,6 +109,43 @@
               </tr>
             </tbody>
           </table>
+          <div class="score-card-totals">
+            <h3 class="section-subtitle">Totals</h3>
+            <ul>
+              <li>
+                <span class="score-card-totals-title">
+                  Score (Upper Section):
+                </span>
+                {{game.currentPlayer.scoreTotals.upperSectionTotal}}
+              </li>
+              <li>
+                <span class="score-card-totals-title">
+                  Bonus?:
+                </span>
+                <span>
+                  {{game.currentPlayer.scoreTotals.upperSectionTotal >= 63 ? 'Yes' : 'No'}}
+                </span>
+              </li>
+              <li>
+                <span class="score-card-totals-title">
+                  Score (Upper Section) with bonus:
+                </span>
+                {{game.currentPlayer.scoreTotals.upperSectionTotalWithBonus}}
+              </li>
+              <li>
+                <span class="score-card-totals-title">
+                  Score (Lower Section):
+                </span>
+                {{game.currentPlayer.scoreTotals.lowerSectionTotal}}
+              </li>
+              <li>
+                <span class="score-card-totals-title">
+                  Grand Total:
+                </span>
+                {{game.currentPlayer.scoreTotals.grandTotal}}
+              </li>
+            </ul>
+          </div>
           <div class="btn-div">
             <button class="btn btn-primary btn-lg btn-block"
               (click)="endTurn()"

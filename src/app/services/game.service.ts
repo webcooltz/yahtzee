@@ -29,8 +29,8 @@ export class GameService {
 
   setPlayers() {
     this.players = [
-      new Player('Player 1', 0, 'white', '1', JSON.parse(JSON.stringify(this.pointsSections)), 3),
-      new Player('Player 2', 0, 'white', '2', JSON.parse(JSON.stringify(this.pointsSections)), 3),
+      new Player('Player 1', 0, 'white', '1', JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}),
+      new Player('Player 2', 0, 'white', '2', JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}),
     ];
   }
   getPlayers() {
@@ -70,12 +70,31 @@ export class GameService {
   // -----End Turn-----
 
   // to calculate score at the end of each turn
-  calculateScore() {
+  calculateRoundScore() {
     const selectedPointSection = this.game.currentPlayer.pointsSections.find(ps => ps.isSelected === true);
     if (selectedPointSection) {
       this.game.currentPlayer.score += selectedPointSection.points;
       selectedPointSection.used = true;
     }
+  }
+
+  // total up the user's score
+  calculateScoreTotals() {
+    const upperSectionTotal = this.game.currentPlayer.pointsSections.filter(ps => ps.isUpperPoints === true).reduce((acc, ps) => acc + ps.points, 0);
+    const upperSectionBonus = upperSectionTotal >= 63 ? 35 : 0;
+    const upperSectionTotalWithBonus = upperSectionTotal + upperSectionBonus;
+    const lowerSectionTotal = this.game.currentPlayer.pointsSections.filter(ps => ps.isUpperPoints === false).reduce((acc, ps) => acc + ps.points, 0);
+    const grandTotal = upperSectionTotalWithBonus + lowerSectionTotal;
+
+    this.game.currentPlayer.scoreTotals = {
+      upperSectionTotal,
+      upperSectionBonus,
+      upperSectionTotalWithBonus,
+      lowerSectionTotal,
+      grandTotal
+    };
+
+    this.game.currentPlayer.score = grandTotal;
   }
 
   // to change the active player at the end of each turn
@@ -92,7 +111,7 @@ export class GameService {
 
   // to change the round at the end of each turn
   nextRound() {
-    if (this.game.currentRoundNumber === this.numberOfRounds) {
+    if (this.game.currentRoundNumber === this.numberOfRounds && this.game.currentPlayer.id === this.game.players[0].id) {
       this.endGame();
       return;
     }
@@ -115,7 +134,8 @@ export class GameService {
   3. change round
   */
   endTurn() {
-    this.calculateScore();
+    this.calculateRoundScore();
+    this.calculateScoreTotals();
     this.nextPlayer();
     this.nextRound();
     this.resetTurnVariables();

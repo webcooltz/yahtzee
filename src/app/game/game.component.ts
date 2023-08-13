@@ -59,6 +59,7 @@ export class GameComponent implements OnDestroy {
     if (this.game.currentPlayer.rollsLeftThisRound > 0) {
       this.game.dice.filter(die => die.isSelected).forEach(die => {
         die.currentNumber = Math.floor(Math.random() * 6) + 1;
+        console.log("this.dice: ", this.game.dice);
       });
       this.game.currentPlayer.rollsLeftThisRound--;
     }
@@ -73,20 +74,24 @@ export class GameComponent implements OnDestroy {
       console.log("selected: ", pointSection);
       this.clearPointsSelection();
 
+      // ---set details for selected section---
+      const setPointSectionDetails = (pointSection: PointsSection) => {
+        pointSection.isSelected = true;
+        pointSection.diceUsed = this.game.dice;
+        this.pointSectionSelected = true;
+        this.selectedPointSection = pointSection;
+      };
+
       // ---UPPER SECTION--- (1-6)
       if (pointSection.isUpperPoints === true) {
         if (this.game.dice.filter(die => die.currentNumber === pointSection.acceptedDie).length > 0) {
           // add up all dice that match the acceptedDie
           pointSection.points += this.game.dice.filter(die => die.currentNumber === pointSection.acceptedDie).length * pointSection.acceptedDie;
-          pointSection.isSelected = true;
-          this.pointSectionSelected = true;
-          this.selectedPointSection = pointSection;
         } else {
           pointSection.points = 0;
-          pointSection.isSelected = true;
-          this.pointSectionSelected = true;
-          this.selectedPointSection = pointSection;
         }
+
+        setPointSectionDetails(pointSection);
       // ---More complicated sections---
       } else if (!pointSection.isUpperPoints) {
         // ---3/4 OF A KIND/YAHTZEE---
@@ -104,27 +109,17 @@ export class GameComponent implements OnDestroy {
           // -3 of a kind- (add up all dice)
           if (pointSection.name.toLowerCase().includes("3") && sharedDiceAmount > 2) {
             pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           // -4 of a kind- (add up all dice)
           } else if (pointSection.name.toLowerCase().includes("4") && sharedDiceAmount > 3) {
             pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           // -yahtzee (5 of a kind)- (50 points)
           } else if (pointSection.name.toLowerCase().includes("5") && sharedDiceAmount > 4) {
             pointSection.points = 50;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           } else {
             pointSection.points = 0;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           }
+
+          setPointSectionDetails(pointSection);
         // ---FULL HOUSE---
         } else if (pointSection.name.toLowerCase().includes("house")) {
           let threeOfAKind = false;
@@ -142,15 +137,11 @@ export class GameComponent implements OnDestroy {
 
           if (threeOfAKind && twoOfAKind) {
             pointSection.points = 25;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           } else {
             pointSection.points = 0;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           }
+
+          setPointSectionDetails(pointSection);
         // ---STRAIGHTS---
         } else if (pointSection.name.toLowerCase().includes("straight")) {
           let smallStraight = false;
@@ -185,27 +176,17 @@ export class GameComponent implements OnDestroy {
 
           if (smallStraight) {
             pointSection.points = 30;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           } else if (largeStraight) {
             pointSection.points = 40;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           } else {
             pointSection.points = 0;
-            pointSection.isSelected = true;
-            this.pointSectionSelected = true;
-            this.selectedPointSection = pointSection;
           }
+
+          setPointSectionDetails(pointSection);
         } else if (pointSection.name.toLowerCase().includes("chance")) {
-          // ---CHANCE---
-          // add up all dice
+          // ---CHANCE--- add up all dice
           pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
-          pointSection.isSelected = true;
-          this.pointSectionSelected = true;
-          this.selectedPointSection = pointSection;
+          setPointSectionDetails(pointSection);
         }
       }
     }
@@ -225,11 +206,17 @@ export class GameComponent implements OnDestroy {
     this.pointSectionSelected = false;
   }
 
+  /* skipTurn():
+  // -if user is unable to select a point section, this selects one and sets it to 0
+  */
   skipTurn() {
     this.gameService.endTurn();
     this.clearPointsSelection();
   }
 
+  /* endTurn():
+  // -if user can select a section, scores it and ends turn
+  */
   endTurn() {
     this.gameService.endTurn();
     this.clearPointsSelection();
@@ -242,11 +229,18 @@ export class GameComponent implements OnDestroy {
 }
 
 /* todo
-// -all temporary (round) logic should be in this component
-// -all game logic/data should be in the game service
-// -disable selecting if user has no rolls left || user has not rolled yet - if rolls > 2 || rolls < 1
-// -calculate bonus
 // -player wins
 // -player highlighting (current player)
-// -menu -- select players works with everyone
+// -menu -- select players works with > 2
+// -fix roll 3 times if changing roll ?
+// -do all the rolls before selecting points ???
+// -game finished early -- test
+// -3-4-5-6 small straight issue?
+// -add debug button which saves the game state to .txt file
+// -add log file?
+// -add game history
+// -add debug button to fix errors if needed manually
+// -add test files to test all functions -- multiple scenarios
+// -view different score cards at the end of the game
+// -add which dice were used for each point section
 */

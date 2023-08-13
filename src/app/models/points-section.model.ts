@@ -6,19 +6,19 @@ export class PointsSection {
   public howToScore: string;
   public used: boolean = false;
   public points: number = 0;
-  public dice: Die[] = []; // which die went into making this happen
+  public diceUsed: Die[] = []; // which die went into making this happen
   public bonus: number; // if total score of upper is >= 63, add 35 points
   public isUpperPoints: boolean;
   public acceptedDie: number; // which dice are accepted for this section -- 0 means all
   public isSelected: boolean = false; // if it's selected -- not scored yet
 
-  constructor(name: string, description: string, howToScore: string, used: boolean, points: number, dice: Die[], bonus: number, isUpperPoints: boolean, acceptedDie: number, isSelected: boolean) {
+  constructor(name: string, description: string, howToScore: string, used: boolean, points: number, diceUsed: Die[], bonus: number, isUpperPoints: boolean, acceptedDie: number, isSelected: boolean) {
     this.name = name;
     this.description = description;
     this.howToScore = howToScore;
     this.used = used;
     this.points = points;
-    this.dice = dice;
+    this.diceUsed = diceUsed;
     this.bonus = bonus;
     this.isUpperPoints = isUpperPoints;
     this.acceptedDie = acceptedDie;

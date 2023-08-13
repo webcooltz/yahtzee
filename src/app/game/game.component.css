@@ -10,6 +10,11 @@
   font-weight: bold;
 }
 
+.section-subtitle {
+  font-size: 1em;
+  font-weight: bold;
+}
+
 /* -----Dice Roll----- */
 
 .active-player-title {
@@ -56,3 +61,10 @@
 /* .point-sections-container { */
 
 /* } */
+
+.score-card-totals-title {
+  /* list-style-type: none; */
+  padding: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+}
