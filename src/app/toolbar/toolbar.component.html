@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <div class="toolbar-container">
+
+    <div class="title-container">
+      <span>Yahtzee</span>
+    </div>
+
+    <div class="options-container">
+      <!-- <span>Options</span> -->
+
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item
+          (click)="onMenuItemClick('resetGame')"
+          [disabled]="!isGameInProgress">
+          Reset Game
+        </button>
+        <button mat-menu-item
+          (click)="onMenuItemClick('exitGame')"
+          [disabled]="!isGameInProgress">
+          Exit Game
+        </button>
+      </mat-menu>
+    </div>
+
+  </div>
+</mat-toolbar>

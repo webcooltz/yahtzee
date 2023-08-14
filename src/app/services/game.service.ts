@@ -18,8 +18,7 @@ export class GameService {
   public pointsSections: PointsSection[] = PointsSection.availableSections
   public numberOfRounds = this.pointsSections.length; // always 13
 
-  constructor() {
-  }
+  constructor() {}
 
   // -----Subjects-----
 
@@ -143,6 +142,29 @@ export class GameService {
   }
 
   // -----End of game-----
+
+  resetGameVariables() {
+
+  }
+
+  // to start the game over with the same options enabled
+  resetGame() {
+    this.players.forEach(player => {
+      player.score = 0;
+      player.pointsSections = JSON.parse(JSON.stringify(this.pointsSections));
+      player.scoreTotals = {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0};
+    });
+
+    this.startGame();
+  }
+
+  // to exit the game and go back to the home page
+  exitGame() {
+    this.resetGame();
+    this.players = [];
+    this.setDice();
+    this.game.gameFinished  = true;
+  }
 
   endGame() {
     this.game.gameFinished = true;
