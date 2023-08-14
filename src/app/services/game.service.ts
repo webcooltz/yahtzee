@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player.model';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Game } from '../models/game.model';
 import { Die } from '../models/die.model';
 import { PointsSection } from '../models/points-section.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,11 @@ export class GameService {
 
   // -----static-----
 
+  public apiUrl: string = 'http://localhost:3000';
   public pointsSections: PointsSection[] = PointsSection.availableSections
   public numberOfRounds = this.pointsSections.length; // always 13
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   // -----Subjects-----
 
@@ -36,15 +38,72 @@ export class GameService {
     return this.game.players.slice();
   }
 
-  setDice() {
-    this.dice = JSON.parse(JSON.stringify(Die.cleanDice));
+  // ---Dice---
+
+  fetchDice() {
+    this.http
+    .get<Die[]>(
+      `${this.apiUrl}/dice`
+    )
+    .subscribe(dice => {
+      this.setDice(dice);
+    }
+    ,(error: any) => {
+      console.log(error);
+    }
+    );
   }
-  getDice() {
-    return this.game.dice.slice();
+
+  setDice(dice: Die[]) {
+    this.game.dice = dice;
+  }
+
+  rollDice() {
+    const requestBody = { dice: this.game.dice };
+    if (this.game.currentPlayer.rollsLeftThisRound > 0) {
+      this.http
+      .put<any>(
+        `${this.apiUrl}/dice/roll`,
+        requestBody
+      )
+      .subscribe(response => {
+        console.log("dice (rolled): ", response.data.dice);
+        this.setDice(response.data.dice);
+      }
+      ,(error: any) => {
+        console.log(error);
+      }
+      );
+
+      this.game.currentPlayer.rollsLeftThisRound--;
+    } else {
+      console.log("You're out of rolls!");
+    }
+
+    this.gameChanged.next(this.game);
+  }
+
+  resetDice() {
+    const requestBody = { dice: this.game.dice };
+    this.http
+    .post<any>(
+      `${this.apiUrl}/dice/reset`,
+      requestBody
+    )
+    .subscribe(response => {
+      console.log("dice (reset): ", response.data.dice);
+      this.setDice(response.data.dice);
+    }
+    ,(error: any) => {
+      console.log(error);
+    }
+    );
   }
 
   startGame() {
-    this.setDice();
+    // this.resetGame();
+    // this.resetDice();
+    this.fetchDice();
 
     this.game = {
       players: this.players,
@@ -120,7 +179,8 @@ export class GameService {
   }
 
   resetTurnVariables() {
-    this.setDice();
+    this.resetDice();
+    // replace with reset func -- will reset via API and that will call the controllers separately
     this.game.dice = this.dice.slice();
 
     this.players.forEach(player => player.rollsLeftThisRound = 3);
@@ -149,6 +209,7 @@ export class GameService {
 
   // to start the game over with the same options enabled
   resetGame() {
+    // this.resetTurnVariables();
     this.players.forEach(player => {
       player.score = 0;
       player.pointsSections = JSON.parse(JSON.stringify(this.pointsSections));
@@ -162,7 +223,7 @@ export class GameService {
   exitGame() {
     this.resetGame();
     this.players = [];
-    this.setDice();
+    // this.setDice();
     this.game.gameFinished  = true;
   }
 

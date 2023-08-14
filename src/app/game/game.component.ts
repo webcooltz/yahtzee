@@ -29,6 +29,7 @@ export class GameComponent implements OnDestroy {
       (game: Game) => {
         this.game = game;
         this.players = this.gameService.getPlayers();
+        console.log("this.game.dice: ", this.game.dice);
       });
 
     this.pointSectionSelected = false;
@@ -55,14 +56,7 @@ export class GameComponent implements OnDestroy {
   */
   rollDice() {
     this.clearPointsSelection();
-
-    if (this.game.currentPlayer.rollsLeftThisRound > 0) {
-      this.game.dice.filter(die => die.isSelected).forEach(die => {
-        die.currentNumber = Math.floor(Math.random() * 6) + 1;
-        console.log("this.dice: ", this.game.dice);
-      });
-      this.game.currentPlayer.rollsLeftThisRound--;
-    }
+    this.gameService.rollDice();
   }
 
   /* selectPointsSection():
@@ -71,7 +65,7 @@ export class GameComponent implements OnDestroy {
   */
   selectPointSection(pointSection: PointsSection) {
     if (pointSection && !pointSection.used && this.game.currentPlayer.rollsLeftThisRound < 3) {
-      console.log("selected: ", pointSection);
+      // console.log("selected: ", pointSection);
       this.clearPointsSelection();
 
       // ---set details for selected section---
@@ -229,6 +223,8 @@ export class GameComponent implements OnDestroy {
 }
 
 /* todo
+// -move component logic to service and API
+// -if yahtzee, show alert, auto-count it
 // -player wins
 // -player highlighting (current player)
 // -menu -- select players works with > 2
