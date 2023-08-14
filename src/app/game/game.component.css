@@ -67,17 +67,33 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 1em;
+}
+
+.dice-roll-outline {
+  border: solid black 1px;
+  height: 100%;
+  width: 100%;
+  /* padding: 1em; */
+  /* margin: 1em; */
 }
 
 .dice-roll-item {
-  border: solid black 1px;
-  padding: 1em;
-  margin: 1em;
+  height: 100%;
+  width: 100%;
 }
 
 .dice-roll-item-title {
   font-size: 1.5em;
   font-weight: bold;
+}
+
+.dice-image {
+  width: 100%;
+  height: 100%;
+  /* margin: 0.5em; */
 }
 
 /* -----Game Status----- */

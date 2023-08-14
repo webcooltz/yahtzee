@@ -80,16 +80,16 @@
             </ul>
           </div>
           <div class="dice-roll">
-            <div class="dice-roll-item"
-              *ngFor="let die of game.dice"
+            <div class="dice-roll-outline"
+            *ngFor="let die of game.dice"
               [ngStyle]="{'border': game.currentPlayer.rollsLeftThisRound > 2 ? 'blue solid 5px': (die.isSelected ? 'solid orange 5px' : 'solid green 5px')}"
               (click)="selectDie(die)">
-              <!-- <img src="assets/images/dice-{{die}}.png" /> -->
-              <span
-                *ngIf="game.currentPlayer.rollsLeftThisRound < 3">
-                {{ die.currentNumber }}
-              </span>
+              <div class="dice-roll-item">
+                <img class="dice-image"
+                  src="../../assets/images/dice-{{die.currentNumber}}.png"
+                  alt="{{die.currentNumber}}" />
             </div>
+          </div>
         </div>
         <button class="btn btn-primary btn-lg btn-block"
           (click)="rollDice()"

@@ -12,10 +12,10 @@ export class Die {
   }
 
   static cleanDice: Die[] = [
-    new Die(1, true, 1, true),
-    new Die(2, true, 2, true),
-    new Die(3, true, 3, true),
-    new Die(4, true, 4, true),
-    new Die(5, true, 5, true)
+    new Die(1, true, 0, true),
+    new Die(2, true, 0, true),
+    new Die(3, true, 0, true),
+    new Die(4, true, 0, true),
+    new Die(5, true, 0, true)
   ];
 }
