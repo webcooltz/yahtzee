@@ -203,12 +203,12 @@
           <div class="btn-div">
             <button class="btn btn-primary btn-lg btn-block"
               (click)="endTurn()"
-              [disabled]="!pointSectionSelected || game.currentPlayer.rollsLeftThisRound > 2 || selectedPointSection && selectedPointSection.points === 0">
+              [disabled]="!game.selections.isPointSectionSelected || game.currentPlayer.rollsLeftThisRound > 2 || game.selections.selectedPointSection && game.selections.selectedPointSection.points === 0">
               End Turn
             </button>
             <button class="btn btn-warning btn-lg btn-block"
               (click)="skipTurn()"
-              [disabled]="game.currentPlayer.rollsLeftThisRound > 0 || game.gameFinished || selectedPointSection && selectedPointSection.points > 0">
+              [disabled]="game.currentPlayer.rollsLeftThisRound > 0 || game.gameFinished || game.selections.selectedPointSection && game.selections.selectedPointSection.points > 0">
               SKIP Turn
             </button>
           </div>
