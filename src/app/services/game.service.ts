@@ -73,7 +73,7 @@ export class GameService {
   calculateRoundScore() {
     const selectedPointSection = this.game.currentPlayer.pointsSections.find(ps => ps.isSelected === true);
     if (selectedPointSection) {
-      this.game.currentPlayer.score += selectedPointSection.points;
+      // this.game.currentPlayer.score += selectedPointSection.points;
       selectedPointSection.used = true;
     }
   }

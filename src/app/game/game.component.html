@@ -1,5 +1,4 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Game</h2>
 
   <!--Game status-->
   <!-- <div class="row">
@@ -26,6 +25,27 @@
         </div>
       </div>
     </div> -->
+
+    <!--Game Score-->
+  <div class="row total-score-row">
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-header section-title">Game Score</div>
+        <div class="card-body score-box-content">
+          <div class="score-box-content-item"
+            *ngFor="let player of game.players">
+            <div class="score-box-content-item-title"
+              [ngStyle]="{'background-color': player.color}">
+              <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
+                {{player.name}}
+              </span>
+            </div>
+            <div class="score-box-content-item-value">{{player.score}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
 
@@ -102,7 +122,7 @@
                 <td
                   (click)="selectPointSection(pointSection)"
                   [ngStyle]="{
-                    'border': pointSection.used ? 'green solid 3px' : (pointSection.isSelected ? 'blue solid 2px' : 'black solid 1px')
+                    'border': pointSection.used && pointSection.points === 0 ? 'red solid 3px' : (pointSection.used ? 'green solid 3px' : (pointSection.isSelected ? 'blue solid 2px' : 'black solid 1px'))
                   }">
                   {{ pointSection.points }}
                 </td>
@@ -111,7 +131,41 @@
           </table>
           <div class="score-card-totals">
             <h3 class="section-subtitle">Totals</h3>
-            <ul>
+            <table class="score-card-totals-table table">
+              <thead>
+                <tr>
+                  <th>Score Type</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Score (Upper Section):</td>
+                  <td>{{game.currentPlayer.scoreTotals.upperSectionTotal}}</td>
+                </tr>
+                <tr>
+                  <td>Bonus?:</td>
+                  <td>
+                    <span>
+                      {{game.currentPlayer.scoreTotals.upperSectionTotal >= 63 ? 'Yes' : 'No'}}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Score (Upper Section) with bonus:</td>
+                  <td>{{game.currentPlayer.scoreTotals.upperSectionTotalWithBonus}}</td>
+                </tr>
+                <tr>
+                  <td>Score (Lower Section):</td>
+                  <td>{{game.currentPlayer.scoreTotals.lowerSectionTotal}}</td>
+                </tr>
+                <tr>
+                  <td>Grand Total:</td>
+                  <td>{{game.currentPlayer.scoreTotals.grandTotal}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- <ul>
               <li>
                 <span class="score-card-totals-title">
                   Score (Upper Section):
@@ -144,7 +198,7 @@
                 </span>
                 {{game.currentPlayer.scoreTotals.grandTotal}}
               </li>
-            </ul>
+            </ul> -->
           </div>
           <div class="btn-div">
             <button class="btn btn-primary btn-lg btn-block"
@@ -161,24 +215,5 @@
         </div>
       </div>
     </div>
-
-  <!--Game Score-->
-  <div class="col-md-6">
-    <div class="card mb-3">
-      <div class="card-header section-title">Game Score</div>
-      <div class="card-body score-box-content">
-        <div class="score-box-content-item"
-          *ngFor="let player of game.players">
-          <div class="score-box-content-item-title"
-            [ngStyle]="{'background-color': player.color}">
-            <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
-              {{player.name}}
-            </span>
-          </div>
-          <div class="score-box-content-item-value">{{player.score}}</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
 </div>
