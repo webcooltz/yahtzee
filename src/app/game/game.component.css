@@ -46,6 +46,11 @@
   margin: 0.5em;
 }
 
+.score-box-player-title {
+  font-size: 1em;
+  font-weight: bold;
+}
+
 /* -----Dice Roll----- */
 
 .active-player-title {

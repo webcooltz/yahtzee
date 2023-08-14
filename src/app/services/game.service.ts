@@ -27,11 +27,11 @@ export class GameService {
 
   // -----New Game-----
 
-  setPlayers() {
-    this.players = [
-      new Player('Player 1', 0, 'white', '1', JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}),
-      new Player('Player 2', 0, 'white', '2', JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}),
-    ];
+  setPlayers(playerCount: number) {
+    this.players = [];
+    for (var i = 0; i < playerCount; i++) {
+      this.players.push(new Player(`Player ${i + 1}`, 0, 'white', `${i + 1}`, JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}));
+    }
   }
   getPlayers() {
     return this.game.players.slice();
@@ -45,7 +45,6 @@ export class GameService {
   }
 
   startGame() {
-    this.setPlayers();
     this.setDice();
 
     this.game = {

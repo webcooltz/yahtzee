@@ -36,7 +36,7 @@
             *ngFor="let player of game.players">
             <div class="score-box-content-item-title"
               [ngStyle]="{'background-color': player.color}">
-              <span [ngStyle]="{'font-weight': player === game.currentPlayer ? 'bold' : 'none'}">
+              <span class="score-box-player-title">
                 {{player.name}}
               </span>
             </div>
