@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.IO Example</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io(); // Connect to the Socket.IO server
+
+    socket.on('connectedUsers', (users) => {
+    // Update the UI to display the list of connected users
+    const userListElement = document.getElementById('userList');
+    userListElement.innerHTML = users.map((user) => `<li>${user.id} - ${user.userAgent} - ${user.ip}</li>`).join('');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+  </script>
+</head>
+<body>
+  <h1>Socket.IO Example</h1>
+  <ul id="userList"></ul>
+</body>
+</html>

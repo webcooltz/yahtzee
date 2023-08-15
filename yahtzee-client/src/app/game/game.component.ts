@@ -4,7 +4,6 @@ import { Game } from '../models/game.model';
 import { Die } from '../models/die.model';
 import { PointsSection } from '../models/points-section.model';
 import { Subscription } from 'rxjs';
-import { Player } from '../models/player.model';
 
 @Component({
   selector: 'app-game',
@@ -14,18 +13,20 @@ import { Player } from '../models/player.model';
 export class GameComponent implements OnDestroy {
   gameChangeSub: Subscription;
   game: Game;
-  players: Player[] = [];
+
+  selectedPointsSection!: PointsSection | undefined;
+  isPointsSectionSelected = false;
 
   constructor(private gameService: GameService) {
     this.gameService.startGame();
     this.game = this.gameService.getGame();
-    this.players = this.gameService.getPlayers();
 
     this.gameChangeSub = this.gameService.gameChanged
     .subscribe(
       (game: Game) => {
         this.game = game;
-        this.players = this.gameService.getPlayers();
+        this.selectedPointsSection = this.gameService.getSelectedPointsSection();
+        this.isPointsSectionSelected = this.selectedPointsSection ? true : false;
       });
   }
 

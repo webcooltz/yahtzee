@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Player } from '../models/player.model';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Game } from '../models/game.model';
 import { Die } from '../models/die.model';
 import { PointsSection } from '../models/points-section.model';
@@ -13,6 +13,8 @@ export class GameService {
   public game!: Game;
   public players: Player[] = [];
   public dice: Die[] = [];
+
+  public selectedPointsSection: PointsSection | undefined;
 
   // -----static-----
 
@@ -31,7 +33,9 @@ export class GameService {
   setPlayers(playerCount: number) {
     this.players = [];
     for (var i = 0; i < playerCount; i++) {
-      this.players.push(new Player(`Player ${i + 1}`, 0, 'white', `${i + 1}`, JSON.parse(JSON.stringify(this.pointsSections)), 3, {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}));
+      this.players.push(new Player(`${i + 1}`, `Player ${i + 1}`, 0, 'white',
+        JSON.parse(JSON.stringify(this.pointsSections)), 3,
+        {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}));
     }
   }
   getPlayers() {
@@ -118,11 +122,7 @@ export class GameService {
       currentRoundNumber: 1,
       gameFinished: false,
       dice: this.dice,
-      currentPlayer: this.players[0],
-      selections: {
-        isPointSectionSelected: false,
-        selectedPointSection: undefined
-      }
+      currentPlayer: this.players[0]
     };
 
     this.gameChanged.next(this.game);
@@ -138,43 +138,57 @@ export class GameService {
 
   // -----End Turn-----
 
+  getSelectedPointsSection() {
+    this.selectedPointsSection = this.game.currentPlayer.pointsSections.find(ps => ps.isSelected === true);
+    return this.selectedPointsSection;
+  }
+  setSelectedPointsSection(pointsSection: PointsSection) {
+    this.selectedPointsSection = pointsSection;
+    this.gameChanged.next(this.game);
+  }
+
+  /* clearPointsSelection():
+  // -finds selected point section
+  // -clears it
+  // use cases
+  // -when a player selects a new point section
+  // -when a player rolls the dice
+  // -when a player ends their turn
+  */
   clearPointsSelection() {
-    this.game.currentPlayer.pointsSections.forEach((ps, i) => {
+    this.game.currentPlayer.pointsSections.forEach((ps) => {
       ps.isSelected = false;
       if (!ps.used) {
         ps.points = 0;
       }
     });
-    this.game.selections.isPointSectionSelected = false;
   }
 
-  selectPointSection(pointSection: PointsSection) {
-    if (pointSection && !pointSection.used && this.game.currentPlayer.rollsLeftThisRound < 3) {
-      // console.log("selected: ", pointSection);
+  selectPointSection(pointsSection: PointsSection) {
+    if (pointsSection && !pointsSection.used && this.game.currentPlayer.rollsLeftThisRound < 3) {
       this.clearPointsSelection();
 
       // ---set details for selected section---
-      const setPointSectionDetails = (pointSection: PointsSection) => {
-        pointSection.isSelected = true;
-        pointSection.diceUsed = this.game.dice;
-        this.game.selections.isPointSectionSelected = true;
-        this.game.selections.selectedPointSection = pointSection;
+      const setPointSectionDetails = (pointsSection: PointsSection) => {
+        pointsSection.isSelected = true;
+        this.setSelectedPointsSection(pointsSection);
+        pointsSection.diceUsed = this.game.dice;
       };
 
       // ---UPPER SECTION--- (1-6)
-      if (pointSection.isUpperPoints === true) {
-        if (this.game.dice.filter(die => die.currentNumber === pointSection.acceptedDie).length > 0) {
+      if (pointsSection.isUpperPoints === true) {
+        if (this.game.dice.filter(die => die.currentNumber === pointsSection.acceptedDie).length > 0) {
           // add up all dice that match the acceptedDie
-          pointSection.points += this.game.dice.filter(die => die.currentNumber === pointSection.acceptedDie).length * pointSection.acceptedDie;
+          pointsSection.points += this.game.dice.filter(die => die.currentNumber === pointsSection.acceptedDie).length * pointsSection.acceptedDie;
         } else {
-          pointSection.points = 0;
+          pointsSection.points = 0;
         }
 
-        setPointSectionDetails(pointSection);
+        setPointSectionDetails(pointsSection);
       // ---More complicated sections---
-      } else if (!pointSection.isUpperPoints) {
+      } else if (!pointsSection.isUpperPoints) {
         // ---3/4 OF A KIND/YAHTZEE---
-        if (pointSection.name.toLowerCase().includes("of a kind")) {
+        if (pointsSection.name.toLowerCase().includes("of a kind")) {
           let sharedDiceAmount = 0;
 
           // check if there are at least 3 of the same dice
@@ -186,21 +200,21 @@ export class GameService {
           });
 
           // -3 of a kind- (add up all dice)
-          if (pointSection.name.toLowerCase().includes("3") && sharedDiceAmount > 2) {
-            pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+          if (pointsSection.name.toLowerCase().includes("3") && sharedDiceAmount > 2) {
+            pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
           // -4 of a kind- (add up all dice)
-          } else if (pointSection.name.toLowerCase().includes("4") && sharedDiceAmount > 3) {
-            pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+          } else if (pointsSection.name.toLowerCase().includes("4") && sharedDiceAmount > 3) {
+            pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
           // -yahtzee (5 of a kind)- (50 points)
-          } else if (pointSection.name.toLowerCase().includes("5") && sharedDiceAmount > 4) {
-            pointSection.points = 50;
+          } else if (pointsSection.name.toLowerCase().includes("5") && sharedDiceAmount > 4) {
+            pointsSection.points = 50;
           } else {
-            pointSection.points = 0;
+            pointsSection.points = 0;
           }
 
-          setPointSectionDetails(pointSection);
+          setPointSectionDetails(pointsSection);
         // ---FULL HOUSE---
-        } else if (pointSection.name.toLowerCase().includes("house")) {
+        } else if (pointsSection.name.toLowerCase().includes("house")) {
           let threeOfAKind = false;
           let twoOfAKind = false;
 
@@ -215,19 +229,19 @@ export class GameService {
           });
 
           if (threeOfAKind && twoOfAKind) {
-            pointSection.points = 25;
+            pointsSection.points = 25;
           } else {
-            pointSection.points = 0;
+            pointsSection.points = 0;
           }
 
-          setPointSectionDetails(pointSection);
+          setPointSectionDetails(pointsSection);
         // ---STRAIGHTS---
-        } else if (pointSection.name.toLowerCase().includes("straight")) {
+        } else if (pointsSection.name.toLowerCase().includes("straight")) {
           let smallStraight = false;
           let largeStraight = false;
 
           // ---SMALL STRAIGHT---
-          if (pointSection.name.toLowerCase().includes("small")) {
+          if (pointsSection.name.toLowerCase().includes("small")) {
             // if it contains 4 consecutive numbers
             this.game.dice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
               // Check for small straight
@@ -235,7 +249,7 @@ export class GameService {
                 smallStraight = true;
               }
             });
-          } else if (pointSection.name.toLowerCase().includes("large")) {
+          } else if (pointsSection.name.toLowerCase().includes("large")) {
             this.game.dice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
               // Check for large straight
               if (index <= array.length - 5) {
@@ -254,28 +268,28 @@ export class GameService {
           }
 
           if (smallStraight) {
-            pointSection.points = 30;
+            pointsSection.points = 30;
           } else if (largeStraight) {
-            pointSection.points = 40;
+            pointsSection.points = 40;
           } else {
-            pointSection.points = 0;
+            pointsSection.points = 0;
           }
 
-          setPointSectionDetails(pointSection);
-        } else if (pointSection.name.toLowerCase().includes("chance")) {
+          setPointSectionDetails(pointsSection);
+        } else if (pointsSection.name.toLowerCase().includes("chance")) {
           // ---CHANCE--- add up all dice
-          pointSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
-          setPointSectionDetails(pointSection);
+          pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+          setPointSectionDetails(pointsSection);
         }
       }
     }
   }
 
   // to calculate score at the end of each turn
+  // gets the selected point section and sets it to used
   calculateRoundScore() {
     const selectedPointSection = this.game.currentPlayer.pointsSections.find(ps => ps.isSelected === true);
     if (selectedPointSection) {
-      // this.game.currentPlayer.score += selectedPointSection.points;
       selectedPointSection.used = true;
     }
   }

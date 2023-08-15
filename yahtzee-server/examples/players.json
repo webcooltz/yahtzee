@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "John",
+        "score": "0",
+        "color": "white",
+        "pointsSections": [
+            {"name": "Aces", "description": "All 1s", "howToScore": "Count and add only Aces", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 1, "isSelected": false},
+            {"name": "Twos", "description": "All 2s", "howToScore": "Count and add only Twos", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 2, "isSelected": false},
+            {"name": "Threes", "description": "All 3s", "howToScore": "Count and add only Threes", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 3, "isSelected": false},
+            {"name": "Fours", "description": "All 4s", "howToScore": "Count and add only Fours", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 4, "isSelected": false},
+            {"name": "Fives", "description": "All 5s", "howToScore": "Count and add only Fives", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 5, "isSelected": false},
+            {"name": "Sixes", "description": "All 6s", "howToScore": "Count and add only Sixes", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 6, "isSelected": false},
+            {"name": "3 of a kind", "description": "3 of the same", "howToScore": "Add total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "4 of a kind", "description": "4 of the same", "howToScore": "Add total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "Full House", "description": "3 of one number and 2 of another", "howToScore": "Score 25", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "Small Straight", "description": "4 in a row", "howToScore": "Score 30", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "Large Straight", "description": "5 in a row", "howToScore": "Score 40", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "Yahtzee", "description": "5 of the same", "howToScore": "Score 50", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+            {"name": "Chance", "description": "Any combination", "howToScore": "Score total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false}
+        ],
+        "rollsLeftThisRound": 3,
+        "scoreTotals": {
+            "upperSectionTotal": 0,
+            "upperSectionBonus": 0,
+            "upperSectionTotalWithBonus": 0,
+            "lowerSectionTotal": 0,
+            "grandTotal": 0
+        },
+        "socketId": "1234"
+    }
+]

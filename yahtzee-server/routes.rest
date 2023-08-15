@@ -1,0 +1,100 @@
+### ----------- DEV -------------- ###
+
+### GET default
+GET http://localhost:3000
+
+### GET dice
+GET http://localhost:3000/dice
+
+### Roll dice (PUT)
+PUT http://localhost:3000/dice/roll HTTP/1.1
+Content-Type: application/json
+
+{
+    "dice": [
+        {
+            "id": "1",
+            "currentNumber": "1",
+            "isSelected": true
+        },
+        {
+            "id": "2",
+            "currentNumber": "2",
+            "isSelected": false
+        },
+        {
+            "id": "3",
+            "currentNumber": "3",
+            "isSelected": true
+        },
+        {
+            "id": "4",
+            "currentNumber": "4",
+            "isSelected": false
+        },
+        {
+            "id": "5",
+            "currentNumber": "5",
+            "isSelected": false
+        }
+    ]  
+}
+
+### Roll dice (PUT)
+PUT http://localhost:3000/dice/reset
+
+# ---------- Players ---------- #
+
+### GET - Get all players
+GET http://localhost:3000/players HTTP/1.1
+
+### GET - Get 1 player - NOT WORKING
+GET http://localhost:3000/players/1 HTTP/1.1
+
+# ----- DELETE -----
+
+### DELETE - Remove 1 player
+DELETE http://localhost:3000/players/1 HTTP/1.1
+
+### DELETE - Remove all players
+DELETE http://localhost:3000/players HTTP/1.1
+
+# ----- PUT -----
+
+### PUT - Reset all players
+PUT http://localhost:3000/players/ HTTP/1.1
+
+### PUT - Update player
+PUT http://localhost:3000/players/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "John",
+    "score": "10",
+    "color": "white",
+    "pointsSections": [
+        {"name": "Aces", "description": "All 1s", "howToScore": "Count and add only Aces", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 1, "isSelected": false},
+        {"name": "Twos", "description": "All 2s", "howToScore": "Count and add only Twos", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 2, "isSelected": false},
+        {"name": "Threes", "description": "All 3s", "howToScore": "Count and add only Threes", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 3, "isSelected": false},
+        {"name": "Fours", "description": "All 4s", "howToScore": "Count and add only Fours", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 4, "isSelected": false},
+        {"name": "Fives", "description": "All 5s", "howToScore": "Count and add only Fives", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 5, "isSelected": false},
+        {"name": "Sixes", "description": "All 6s", "howToScore": "Count and add only Sixes", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": true, "acceptedDie": 6, "isSelected": false},
+        {"name": "3 of a kind", "description": "3 of the same", "howToScore": "Add total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "4 of a kind", "description": "4 of the same", "howToScore": "Add total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "Full House", "description": "3 of one number and 2 of another", "howToScore": "Score 25", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "Small Straight", "description": "4 in a row", "howToScore": "Score 30", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "Large Straight", "description": "5 in a row", "howToScore": "Score 40", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "Yahtzee", "description": "5 of the same", "howToScore": "Score 50", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false},
+        {"name": "Chance", "description": "Any combination", "howToScore": "Score total of all dice", "used": false, "points": 0, "diceUsed": [], "bonus": 0, "isUpperPoints": false, "acceptedDie": 0, "isSelected": false}
+    ],
+    "rollsLeftThisRound": 3,
+    "scoreTotals": {
+        "upperSectionTotal": 0,
+        "upperSectionBonus": 0,
+        "upperSectionTotalWithBonus": 0,
+        "lowerSectionTotal": 0,
+        "grandTotal": 0
+    },
+    "socketId": "1234"
+}
