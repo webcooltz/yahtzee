@@ -3,6 +3,8 @@ const router = express.Router();
 
 router.use('/dice', require('./dice'));
 router.use('/players', require('./players'));
+router.use('/lobbies', require('./lobbies'));
+router.use('/games', require('./games'));
 
 router.get('/', function(req, res) {
   res.send('welcome to yahtzee :)');

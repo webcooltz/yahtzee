@@ -25,7 +25,9 @@ const playerSchema = mongoose.Schema({
         lowerSectionTotal: Number,
         grandTotal: Number
     },
-    socketId: { type: String, required: true }
+    socketId: { type: String, required: true },
+    gameId: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: false },
+    lobbyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Lobby', required: false }
 });
 
 module.exports = mongoose.model('Player', playerSchema);

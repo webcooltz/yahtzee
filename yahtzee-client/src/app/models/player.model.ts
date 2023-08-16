@@ -1,10 +1,5 @@
 import { Die } from "./die.model";
 
-// export interface Selections {
-//   isPointSectionSelected: boolean;
-//   selectedPointSection: PointsSection | undefined;
-// }
-
 export interface ScoreTotals {
   upperSectionTotal: number;
   upperSectionBonus: number;
@@ -59,9 +54,21 @@ export class Player {
   public pointsSections: PointsSection[];
   public rollsLeftThisRound: number;
   public scoreTotals: ScoreTotals;
-  // public selections: Selections;
+  public socketId: string;
+  public gameId: string;
 
-  constructor(id: string, name: string, score: number, color: string, pointsSections: PointsSection[], rollsLeftThisRound: number, scoreTotals: ScoreTotals) {
+  constructor(
+    id: string,
+    name: string,
+    score: number,
+    color: string,
+    pointsSections: PointsSection[],
+    rollsLeftThisRound: number,
+    scoreTotals: ScoreTotals,
+    socketId: string,
+    gameId: string
+    )
+  {
     this.id = id;
     this.name = name;
     this.score = score;
@@ -69,7 +76,8 @@ export class Player {
     this.pointsSections = pointsSections;
     this.rollsLeftThisRound = rollsLeftThisRound;
     this.scoreTotals = scoreTotals;
-    // this.selections = selections;
+    this.socketId = socketId;
+    this.gameId = gameId;
   }
 
   static availableSections = [

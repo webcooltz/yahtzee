@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const gameSchema = mongoose.Schema({
+    id: { type: String, required: true },
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     currentRoundNumber: { type: Number, required: true },
     gameFinished: { type: Boolean, default: false },

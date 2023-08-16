@@ -7,5 +7,9 @@ multiplayer
 -add a player instance for each player connected to the game
 -remove and add players as connections change
 
+sessions
+-
+
 later
 -login
+-sessions

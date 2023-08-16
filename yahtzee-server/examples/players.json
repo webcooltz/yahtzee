@@ -27,6 +27,8 @@
             "lowerSectionTotal": 0,
             "grandTotal": 0
         },
-        "socketId": "1234"
+        "socketId": "1234",
+        "gameId": "64dd0bc03225d13aba93abee",
+        "lobbyId": "w434"
     }
 ]

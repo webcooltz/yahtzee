@@ -3,11 +3,28 @@
 ### GET default
 GET http://localhost:3000
 
+# ---------- Game ---------- #
+
+### GET game by ID
+GET http://localhost:3000/game/1
+
+### POST - New Game
+POST http://localhost:3000/game HTTP/1.1
+Content-Type: application/json
+
+{
+    "Game": {
+
+    }
+}
+
+# ---------- Dice ---------- #
+
 ### GET dice
-GET http://localhost:3000/dice
+GET http://localhost:3000/dice/1
 
 ### Roll dice (PUT)
-PUT http://localhost:3000/dice/roll HTTP/1.1
+PUT http://localhost:3000/dice/1/roll HTTP/1.1
 Content-Type: application/json
 
 {
@@ -41,7 +58,7 @@ Content-Type: application/json
 }
 
 ### Roll dice (PUT)
-PUT http://localhost:3000/dice/reset
+PUT http://localhost:3000/dice/1/reset
 
 # ---------- Players ---------- #
 
@@ -98,3 +115,33 @@ Content-Type: application/json
     },
     "socketId": "1234"
 }
+
+
+# ---------- Lobbies ---------- #
+
+### POST - New Lobby
+POST http://localhost:3000/lobbies HTTP/1.1
+Content-Type: application/json
+
+{
+    "playerId": "64dd1512e8b0f772c6848072"
+}
+
+### PUT - Join Lobby
+PUT http://localhost:3000/lobbies/8625G/join HTTP/1.1
+Content-Type: application/json
+
+{
+    "playerId": "64dd1512e8b0f772c6848072"
+}
+
+### PUT - Leave Lobby
+PUT http://localhost:3000/lobbies/8625G/leave HTTP/1.1
+Content-Type: application/json
+
+{
+    "playerId": "64dd1512e8b0f772c6848072"
+}
+
+### DELETE - Delete Lobby
+DELETE http://localhost:3000/lobbies/8625G HTTP/1.1

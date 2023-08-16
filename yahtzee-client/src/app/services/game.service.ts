@@ -5,6 +5,7 @@ import { Game } from '../models/game.model';
 import { Die } from '../models/die.model';
 import { PointsSection } from '../models/points-section.model';
 import { HttpClient } from '@angular/common/http';
+import { Dice } from '../models/dice.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 export class GameService {
   public game!: Game;
   public players: Player[] = [];
-  public dice: Die[] = [];
+  public dice!: Dice;
 
   public selectedPointsSection: PointsSection | undefined;
 
@@ -21,6 +22,14 @@ export class GameService {
   public apiUrl: string = 'http://localhost:3000';
   public pointsSections: PointsSection[] = PointsSection.availableSections
   public numberOfRounds = this.pointsSections.length; // always 13
+
+  // static cleanDice: Die[] = [
+  //   new Die(1, 0, true),
+  //   new Die(2, 0, true),
+  //   new Die(3, 0, true),
+  //   new Die(4, 0, true),
+  //   new Die(5, 0, true)
+  // ];
 
   constructor(private http: HttpClient) {}
 
@@ -35,7 +44,7 @@ export class GameService {
     for (var i = 0; i < playerCount; i++) {
       this.players.push(new Player(`${i + 1}`, `Player ${i + 1}`, 0, 'white',
         JSON.parse(JSON.stringify(this.pointsSections)), 3,
-        {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}));
+        {upperSectionTotal: 0, upperSectionBonus: 0, upperSectionTotalWithBonus: 0, lowerSectionTotal: 0, grandTotal: 0}, "123", this.game.id));
     }
   }
   getPlayers() {
@@ -46,7 +55,7 @@ export class GameService {
 
   selectDie(die: Die) {
     if (this.game.currentPlayer.rollsLeftThisRound < 3) {
-      this.game.dice[die.id - 1].isSelected = die.isSelected ? false : true;
+      this.game.dice.currentDice[die.id - 1].isSelected = die.isSelected ? false : true;
     }
   }
 
@@ -65,11 +74,11 @@ export class GameService {
   }
 
   setDice(dice: Die[]) {
-    this.game.dice = dice;
+    this.game.dice.currentDice = dice;
   }
 
   rollDice() {
-    const requestBody = { dice: this.game.dice };
+    const requestBody = { dice: this.game.dice.currentDice };
     if (this.game.currentPlayer.rollsLeftThisRound > 0) {
       this.http
       .put<any>(
@@ -94,7 +103,7 @@ export class GameService {
   }
 
   resetDice() {
-    const requestBody = { dice: this.game.dice };
+    const requestBody = { dice: this.game.dice.currentDice };
     this.http
     .post<any>(
       `${this.apiUrl}/dice/reset`,
@@ -115,9 +124,11 @@ export class GameService {
   startGame() {
     // this.resetGame();
     // this.resetDice();
+    // this.setPlayers();
     this.fetchDice();
 
     this.game = {
+      id: '1',
       players: this.players,
       currentRoundNumber: 1,
       gameFinished: false,
@@ -172,14 +183,14 @@ export class GameService {
       const setPointSectionDetails = (pointsSection: PointsSection) => {
         pointsSection.isSelected = true;
         this.setSelectedPointsSection(pointsSection);
-        pointsSection.diceUsed = this.game.dice;
+        pointsSection.diceUsed = this.game.dice.currentDice;
       };
 
       // ---UPPER SECTION--- (1-6)
       if (pointsSection.isUpperPoints === true) {
-        if (this.game.dice.filter(die => die.currentNumber === pointsSection.acceptedDie).length > 0) {
+        if (this.game.dice.currentDice.filter(die => die.currentNumber === pointsSection.acceptedDie).length > 0) {
           // add up all dice that match the acceptedDie
-          pointsSection.points += this.game.dice.filter(die => die.currentNumber === pointsSection.acceptedDie).length * pointsSection.acceptedDie;
+          pointsSection.points += this.game.dice.currentDice.filter(die => die.currentNumber === pointsSection.acceptedDie).length * pointsSection.acceptedDie;
         } else {
           pointsSection.points = 0;
         }
@@ -192,8 +203,8 @@ export class GameService {
           let sharedDiceAmount = 0;
 
           // check if there are at least 3 of the same dice
-          this.game.dice.forEach(die => {
-            let similarDiceAmount = this.game.dice.filter(d => d.currentNumber === die.currentNumber).length;
+          this.game.dice.currentDice.forEach(die => {
+            let similarDiceAmount = this.game.dice.currentDice.filter(d => d.currentNumber === die.currentNumber).length;
             if (similarDiceAmount > 2) {
               sharedDiceAmount = similarDiceAmount;
             }
@@ -201,10 +212,10 @@ export class GameService {
 
           // -3 of a kind- (add up all dice)
           if (pointsSection.name.toLowerCase().includes("3") && sharedDiceAmount > 2) {
-            pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+            pointsSection.points = this.game.dice.currentDice.reduce((total, die) => total + die.currentNumber, 0);
           // -4 of a kind- (add up all dice)
           } else if (pointsSection.name.toLowerCase().includes("4") && sharedDiceAmount > 3) {
-            pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+            pointsSection.points = this.game.dice.currentDice.reduce((total, die) => total + die.currentNumber, 0);
           // -yahtzee (5 of a kind)- (50 points)
           } else if (pointsSection.name.toLowerCase().includes("5") && sharedDiceAmount > 4) {
             pointsSection.points = 50;
@@ -219,8 +230,8 @@ export class GameService {
           let twoOfAKind = false;
 
           // if it contains 3 of one type and 2 of another:
-          this.game.dice.forEach(die => {
-            let similarDiceAmount = this.game.dice.filter(d => d.currentNumber === die.currentNumber).length;
+          this.game.dice.currentDice.forEach(die => {
+            let similarDiceAmount = this.game.dice.currentDice.filter(d => d.currentNumber === die.currentNumber).length;
             if (similarDiceAmount === 3) {
               threeOfAKind = true;
             } else if (similarDiceAmount === 2) {
@@ -243,14 +254,14 @@ export class GameService {
           // ---SMALL STRAIGHT---
           if (pointsSection.name.toLowerCase().includes("small")) {
             // if it contains 4 consecutive numbers
-            this.game.dice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
+            this.game.dice.currentDice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
               // Check for small straight
               if (index <= array.length - 4 && array[index + 3] === die + 3) {
                 smallStraight = true;
               }
             });
           } else if (pointsSection.name.toLowerCase().includes("large")) {
-            this.game.dice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
+            this.game.dice.currentDice.map(die => die.currentNumber).sort().forEach((die, index, array) => {
               // Check for large straight
               if (index <= array.length - 5) {
                 let isLargeStraight = true;
@@ -278,7 +289,7 @@ export class GameService {
           setPointSectionDetails(pointsSection);
         } else if (pointsSection.name.toLowerCase().includes("chance")) {
           // ---CHANCE--- add up all dice
-          pointsSection.points = this.game.dice.reduce((total, die) => total + die.currentNumber, 0);
+          pointsSection.points = this.game.dice.currentDice.reduce((total, die) => total + die.currentNumber, 0);
           setPointSectionDetails(pointsSection);
         }
       }
@@ -340,7 +351,7 @@ export class GameService {
   resetTurnVariables() {
     this.resetDice();
     // replace with reset func -- will reset via API and that will call the controllers separately
-    this.game.dice = this.dice.slice();
+    this.game.dice.currentDice = this.dice.currentDice.slice();
 
     this.players.forEach(player => player.rollsLeftThisRound = 3);
   }

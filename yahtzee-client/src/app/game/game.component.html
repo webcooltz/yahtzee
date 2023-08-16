@@ -81,7 +81,7 @@
           </div>
           <div class="dice-roll">
             <div class="dice-roll-outline"
-            *ngFor="let die of game.dice"
+            *ngFor="let die of game.dice.currentDice"
               [ngStyle]="{'border': game.currentPlayer.rollsLeftThisRound > 2 ? 'blue solid 5px': (die.isSelected ? 'solid orange 5px' : 'solid green 5px')}"
               (click)="selectDie(die)">
               <div class="dice-roll-item">

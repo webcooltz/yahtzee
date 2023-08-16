@@ -1,6 +1,6 @@
 const socketIO = require('socket.io');
 const connectedUsers = [];
-const playerController = require('./controllers/player');
+const playerController = require('.././controllers/player');
 
 module.exports = (server) => {
   const io = socketIO(server);

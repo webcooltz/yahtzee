@@ -20,10 +20,10 @@ const getPlayersFromDB = async () => {
 // - Return the players
 */
 const getPlayers = async (req, res) => {
-    console.log("getPlayers() called");
+    // console.log("getPlayers() called");
     getPlayersFromDB().then(players => {
         if (players) {
-            console.log("players: ", players);
+            // console.log("players: ", players);
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(players);
         } else {
@@ -39,6 +39,7 @@ const getPlayers = async (req, res) => {
 // - when a player joins a game
 */
 const addPlayer = async (user) => {
+    // get players where gameId = lobby?.code
     const players = await getPlayersFromDB();
     const lastId = players.length > 0 ? players[players.length - 1].id : 0;
 
@@ -74,7 +75,9 @@ const addPlayer = async (user) => {
                 lowerSectionTotal: 0,
                 grandTotal: 0
             },
-            socketId: user.id
+            socketId: user.id,
+            // gameId: "",
+            // lobbyId: "",
         });
 
         const playerToUpdate = await player.save();

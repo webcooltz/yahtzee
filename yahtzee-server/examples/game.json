@@ -1,0 +1,12 @@
+[
+    {
+        "id": "0",
+        "players": [
+            "64dbf4611b9e3cb28f0eb4bc"
+        ],
+        "currentRoundNumber": 1,
+        "gameFinished": false,
+        "dice": "64dd0a4a3225d13aba93abe4",
+        "currentPlayer": "64dbf4611b9e3cb28f0eb4bc"
+    }
+]

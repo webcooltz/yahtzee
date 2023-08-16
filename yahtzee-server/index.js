@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 // ---App setup---
 const app = express();
 const server = require('http').createServer(app);
-const socketSetup = require('./socketSetup');
+const socketSetup = require('./socket/socketSetup');
 
 app
   .use(express.static('public')) // Serve static files from the "public" directory

@@ -1,35 +1,47 @@
-const Die = require('../models/die');
+const Die = require('../models/dice');
 
-/* getDiceFromDB():
-// - Retrieve all dice from the DB
+/* getDiceByGameId():
+// - Retrieve dice for game session
 // - Return the dice
 */
-const getDiceFromDB = async () => {
-    const dice = await Die.find();
-    if (dice) {
-        // console.log("dice: ", dice);
-        return dice;
-    } else {
-        console.log("no dice found");
+const getDiceByGameId = async (gameId) => {
+    console.log("gameId: ", gameId);
+    try {
+        const dice = await Die.find({ gameId: gameId });
+        if (dice) {
+            console.log("dice: ", dice);
+            return dice;
+        } else {
+            console.log("no dice found");
+            return null;
+        }
+    } catch (err) {
+        console.log("getDiceByGameId failed \nerror: ", err);
         return null;
     }
 };
 
 /* getDice():
-// - Retrieve all dice from the DB
+// - Retrieve dice for game session
 // - Return the dice
 */
 const getDice = async (req, res) => {
-    // console.log("getDice() called");
-    getDiceFromDB().then(dice => {
-        if (dice) {
-            console.log("dice: ", dice);
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(dice);
-        } else {
-            res.status(500).json({ error: 'Unable to retrieve dice' });
-        }
-    });
+    const gameId = req.params.id;
+
+    try {
+        getDiceByGameId(gameId).then(dice => {
+            if (dice) {
+                console.log("dice: ", dice);
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).json(dice);
+            } else {
+                res.status(500).json({ error: 'Unable to retrieve dice' });
+            }
+        });
+    } catch (err) {
+        console.log("getDice failed \nerror: ", err);
+        res.status(500).json({ error: err });
+    }
 };
 
 /* rollDice():

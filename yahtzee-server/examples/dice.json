@@ -1,27 +1,32 @@
 [
     {
-        "id": "1",
-        "currentNumber": "1",
-        "isSelected": false
-    },
-    {
-        "id": "2",
-        "currentNumber": "2",
-        "isSelected": false
-    },
-    {
-        "id": "3",
-        "currentNumber": "3",
-        "isSelected": false
-    },
-    {
-        "id": "4",
-        "currentNumber": "4",
-        "isSelected": false
-    },
-    {
-        "id": "5",
-        "currentNumber": "5",
-        "isSelected": false
+        "gameId": "64dd0bc03225d13aba93abee",
+        "currentDice": [
+            {
+                "id": "1",
+                "currentNumber": "1",
+                "isSelected": false
+            },
+            {
+                "id": "2",
+                "currentNumber": "2",
+                "isSelected": false
+            },
+            {
+                "id": "3",
+                "currentNumber": "3",
+                "isSelected": false
+            },
+            {
+                "id": "4",
+                "currentNumber": "4",
+                "isSelected": false
+            },
+            {
+                "id": "5",
+                "currentNumber": "5",
+                "isSelected": false
+            }
+        ]
     }
 ]
